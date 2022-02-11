@@ -10,3 +10,6 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+GPATH
+GRTAGS
+GTAGS
