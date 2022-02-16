@@ -83,4 +83,12 @@ static const R_CallMethodDef CallEntries[] = {
 void R_init_narrow(DllInfo *dll) {
   R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
+
+  // used by external packages linking to internal narrow code from C
+  R_RegisterCCallable("narrow","narrow_c_array_from_sexp",(DL_FUNC) &narrow_c_array_from_sexp);
+  R_RegisterCCallable("narrow","narrow_c_array_info",(DL_FUNC) &narrow_c_array_info);
+  R_RegisterCCallable("narrow","narrow_c_allocate_schema",(DL_FUNC) &narrow_c_allocate_schema);
+  R_RegisterCCallable("narrow","narrow_c_allocate_array_data",(DL_FUNC) &narrow_c_allocate_array_data);
+  R_RegisterCCallable("narrow","narrow_c_schema_xptr_new",(DL_FUNC) &narrow_c_schema_xptr_new);
+
 }
