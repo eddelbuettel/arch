@@ -87,8 +87,38 @@ void R_init_narrow(DllInfo *dll) {
   // used by external packages linking to internal narrow code from C
   R_RegisterCCallable("narrow","narrow_c_array_from_sexp",(DL_FUNC) &narrow_c_array_from_sexp);
   R_RegisterCCallable("narrow","narrow_c_array_info",(DL_FUNC) &narrow_c_array_info);
+  R_RegisterCCallable("narrow","narrow_c_narrow_array_stream",(DL_FUNC) &narrow_c_narrow_array_stream);
+  R_RegisterCCallable("narrow","narrow_c_function_array_stream",(DL_FUNC) &narrow_c_function_array_stream);
+  R_RegisterCCallable("narrow","narrow_c_export_array_stream",(DL_FUNC) &narrow_c_export_array_stream);
+  R_RegisterCCallable("narrow","narrow_c_narrow_array_stream_get_schema", (DL_FUNC) &narrow_c_narrow_array_stream_get_schema);
+  R_RegisterCCallable("narrow","narrow_c_narrow_array_stream_get_next", (DL_FUNC) &narrow_c_narrow_array_stream_get_next);
+  R_RegisterCCallable("narrow","narrow_c_array_validate", (DL_FUNC) &narrow_c_narrow_array_stream_get_next);
+  R_RegisterCCallable("narrow","narrow_c_logical_from_bitmask", (DL_FUNC) &narrow_c_logical_from_bitmask);
+  R_RegisterCCallable("narrow","narrow_c_bitmask_from_logical", (DL_FUNC) &narrow_c_bitmask_from_logical);
+  R_RegisterCCallable("narrow","narrow_c_logical_from_array", (DL_FUNC) &narrow_c_logical_from_array);
+  R_RegisterCCallable("narrow","narrow_c_integer_from_array", (DL_FUNC) &narrow_c_integer_from_array);
+  R_RegisterCCallable("narrow","narrow_c_double_from_array", (DL_FUNC) &narrow_c_double_from_array);
+  R_RegisterCCallable("narrow","narrow_c_raw_from_array", (DL_FUNC) &narrow_c_raw_from_array);
+  R_RegisterCCallable("narrow","narrow_c_character_from_array", (DL_FUNC) &narrow_c_character_from_array);
+  R_RegisterCCallable("narrow","narrow_c_buffers_from_character", (DL_FUNC) &narrow_c_buffers_from_character);
+  R_RegisterCCallable("narrow","narrow_c_deep_copy", (DL_FUNC) &narrow_c_deep_copy);
+  R_RegisterCCallable("narrow","narrow_c_double_from_int64", (DL_FUNC) &narrow_c_double_from_int64);
+  R_RegisterCCallable("narrow","narrow_c_int64_from_double", (DL_FUNC) &narrow_c_int64_from_double);
+  R_RegisterCCallable("narrow","narrow_c_int64_from_integer", (DL_FUNC) &narrow_c_int64_from_integer);
+  R_RegisterCCallable("narrow","narrow_c_pointer", (DL_FUNC) &narrow_c_pointer);
+  R_RegisterCCallable("narrow","narrow_c_pointer_is_valid", (DL_FUNC) &narrow_c_pointer_is_valid);
+  R_RegisterCCallable("narrow","narrow_c_pointer_release", (DL_FUNC) &narrow_c_pointer_release);
+  R_RegisterCCallable("narrow","narrow_c_pointer_addr_dbl", (DL_FUNC) &narrow_c_pointer_addr_dbl);
+  R_RegisterCCallable("narrow","narrow_c_pointer_addr_chr", (DL_FUNC) &narrow_c_pointer_addr_chr);
+  R_RegisterCCallable("narrow","narrow_c_pointer_move", (DL_FUNC) &narrow_c_pointer_move);
+  R_RegisterCCallable("narrow","narrow_c_export_schema", (DL_FUNC) &narrow_c_export_schema);
+  R_RegisterCCallable("narrow","narrow_c_export_array_data", (DL_FUNC) &narrow_c_export_array_data);
   R_RegisterCCallable("narrow","narrow_c_allocate_schema",(DL_FUNC) &narrow_c_allocate_schema);
   R_RegisterCCallable("narrow","narrow_c_allocate_array_data",(DL_FUNC) &narrow_c_allocate_array_data);
+  R_RegisterCCallable("narrow","narrow_c_allocate_array_stream", (DL_FUNC) &narrow_c_allocate_array_stream);
   R_RegisterCCallable("narrow","narrow_c_schema_xptr_new",(DL_FUNC) &narrow_c_schema_xptr_new);
+  R_RegisterCCallable("narrow","narrow_c_schema_deep_copy", (DL_FUNC) &narrow_c_schema_deep_copy);
+  R_RegisterCCallable("narrow","narrow_c_schema_data", (DL_FUNC) &narrow_c_schema_data);
+  R_RegisterCCallable("narrow","narrow_c_xptr_addr", (DL_FUNC) &narrow_c_xptr_addr);
 
 }
