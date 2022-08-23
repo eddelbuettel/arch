@@ -1,24 +1,18 @@
-Package: narrow
-Title: An R Interface to the 'Apache Arrow' C API
-Version: 0.0.1.20220222
-Authors@R: c(person(given = "Dewey", family = "Dunnington", role = c("aut"),
-                    email = "dewey@fishandwhistle.net",
-                    comment = c(ORCID = "0000-0002-9415-4582")),
-             person(given = "Dirk", family = "Eddelbuettel", role = c("cre"),
-                    email = "edd@debian.org"))
-Description: Provides an R API to the 'Apache Arrow' C API.
+Package: arch
+Title: 'Arrow' R and C Helpers
+Version: 0.0.1
+Author: Dewey Dunnington, Dirk Eddelbuettel
+Maintainer: Dirk Eddelbuettel <edd@debian.org>
+Description: The 'Apache Arrow' project offers a zero-dependency C interface which
+ this package uses to create and proces 'Arrow' objects -- without requiring the 
+ 'arrow' package. This package builds upon a lot of earlier work in package
+ 'narrow' (formerly also named 'sparrow', 'carrow', 'arrowc') by Dewey.
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
-Suggests:
-    arrow,
-    covr,
-    rmarkdown,
-    testthat (>= 3.0.0),
-    vctrs
+RoxygenNote: 7.2.1
+Suggests: arrow, covr, rmarkdown, testthat (>= 3.0.0), vctrs
 Config/testthat/edition: 3
-URL: https://github.com/paleolimbot/narrow,
-    https://paleolimbot.github.io/narrow/
-BugReports: https://github.com/paleolimbot/narrow/issues
+URL: https://github.com/eddelbuettel/arch, https://github.com/paleolimbot/narrow
+BugReports: https://github.com/eddelbuettel/arch/issues

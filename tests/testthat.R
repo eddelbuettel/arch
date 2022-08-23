@@ -1,4 +1,4 @@
 library(testthat)
-library(narrow)
+library(arch)
 
-test_check("narrow")
+test_check("arch")
