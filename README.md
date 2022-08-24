@@ -1,18 +1,24 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+# arch: Arrow R and C Helpers
 
-# narrow
+[![ci](https://github.com/eddelbuettel/arch/actions/workflows/ci.yaml/badge.svg)](https://github.com/eddelbuettel/arch/actions/workflows/ci.yaml)
 
-<!-- badges: start -->
+The `arch` package is a fork with small extensions of the
+[narrow](https://github.com/paleolimbot/narrow) package by Dewey Dunnington
+who wrote the core of the package.  
 
-[![Codecov test
-coverage](https://codecov.io/gh/paleolimbot/narrow/branch/master/graph/badge.svg)](https://codecov.io/gh/paleolimbot/narrow?branch=master)
-[![R-CMD-check](https://github.com/paleolimbot/narrow/workflows/R-CMD-check/badge.svg)](https://github.com/paleolimbot/narrow/actions)
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-<!-- badges: end -->
+We found it very useful in testing interacting with Arrow objects _without
+requiring the full weight of the `arrow` package_ and have used it for many
+months along with small extensions such as a generalized C-level API export
+from an earlier fork of ours.  As `narrow` appears to have stalled upstream,
+and/or is being replaced by a C++-only variant, we decided to adopt and
+maintain this variant as it is useful for its _Arrow R and C Helper_ functions.
 
-The goal of narrow is to wrap the [Arrow Data C
+The remainder of README.md is the original, with only a minimal `s/narrow/arch`.
+
+---
+
+The goal of arch is to wrap the [Arrow Data C
 API](https://arrow.apache.org/docs/format/CDataInterface.html) and
 [Arrow Stream C
 API](https://arrow.apache.org/docs/format/CStreamInterface.html) to
@@ -26,22 +32,22 @@ You can install the development version from
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("paleolimbot/narrow")
+remotes::install_github("eddelbuettel/arch")
 ```
 
 ## Creating arrays
 
-You can create an Arrow array using `as_narrow_array()`. For many types
+You can create an Arrow array using `as_arch_array()`. For many types
 (e.g., integers and doubles), this is done without any copying of
-memory: narrow just arranges the existing R vector memory and protects
+memory: arch just arranges the existing R vector memory and protects
 it for the lifetime of the underlying `struct ArrowArray`.
 
 ``` r
-library(narrow)
-(array <- as_narrow_array(1:5))
-#> <narrow_array i[5]>
+library(arch)
+(array <- as_arch_array(1:5))
+#> <arch_array i[5]>
 #> - schema:
-#>   <narrow_schema 'i' at 0x55967f8285a0>
+#>   <arch_schema 'i' at 0x55967f8285a0>
 #>   - format: i
 #>   - name: 
 #>   - flags: nullable
@@ -49,7 +55,7 @@ library(narrow)
 #>   - dictionary: NULL
 #>   - children[0]:
 #> - array_data:
-#>   <narrow_array_data at 0x559682692480>
+#>   <arch_array_data at 0x559682692480>
 #>   - length: 5
 #>   - null_count: 0
 #>   - offset: 0
@@ -66,10 +72,10 @@ zero-copy operation and is instantaneous even for very large Arrays.
 
 ``` r
 library(arrow)
-(array2 <- as_narrow_array(Array$create(1:5)))
-#> <narrow_array i[5]>
+(array2 <- as_arch_array(Array$create(1:5)))
+#> <arch_array i[5]>
 #> - schema:
-#>   <narrow_schema 'i' at 0x5596817a4350>
+#>   <arch_schema 'i' at 0x5596817a4350>
 #>   - format: i
 #>   - name: 
 #>   - flags: nullable
@@ -77,7 +83,7 @@ library(arrow)
 #>   - dictionary: NULL
 #>   - children[0]:
 #> - array_data:
-#>   <narrow_array_data at 0x559681bbade0>
+#>   <arch_array_data at 0x559681bbade0>
 #>   - length: 5
 #>   - null_count: 0
 #>   - offset: 0
@@ -91,20 +97,20 @@ library(arrow)
 ## Exporting arrays
 
 To convert an array object to some other type, use
-`from_narrow_array()`:
+`from_arch_array()`:
 
 ``` r
-str(from_narrow_array(array))
+str(from_arch_array(array))
 #>  int [1:5] 1 2 3 4 5
 ```
 
-The narrow package has built-in defaults for converting arrays to R
+The arch package has built-in defaults for converting arrays to R
 objects; you can also specify your own using the `ptype` argument:
 
 ``` r
-str(from_narrow_array(array, ptype = double()))
+str(from_arch_array(array, ptype = double()))
 #>  num [1:5] 1 2 3 4 5
-from_narrow_array(array, ptype = arrow::Array)
+from_arch_array(array, ptype = arrow::Array)
 #> Array
 #> <int32>
 #> [
@@ -120,14 +126,14 @@ from_narrow_array(array, ptype = arrow::Array)
 
 The Arrow C API also specifies an experimental stream interface. In
 addition to handling streams created elsewhere, you can create streams
-based on a `narrow_array()`:
+based on a `arch_array()`:
 
 ``` r
-stream1 <- as_narrow_array_stream(as_narrow_array(1:3))
-narrow_array_stream_get_next(stream1)
-#> <narrow_array i[3]>
+stream1 <- as_arch_array_stream(as_arch_array(1:3))
+arch_array_stream_get_next(stream1)
+#> <arch_array i[3]>
 #> - schema:
-#>   <narrow_schema 'i' at 0x559682878380>
+#>   <arch_schema 'i' at 0x559682878380>
 #>   - format: i
 #>   - name: 
 #>   - flags: nullable
@@ -135,7 +141,7 @@ narrow_array_stream_get_next(stream1)
 #>   - dictionary: NULL
 #>   - children[0]:
 #> - array_data:
-#>   <narrow_array_data at 0x5596812cff20>
+#>   <arch_array_data at 0x5596812cff20>
 #>   - length: 3
 #>   - null_count: 0
 #>   - offset: 0
@@ -144,17 +150,17 @@ narrow_array_stream_get_next(stream1)
 #>     $ :<externalptr> 
 #>   - dictionary: NULL
 #>   - children[0]:
-narrow_array_stream_get_next(stream1)
+arch_array_stream_get_next(stream1)
 #> NULL
 ```
 
-…or based on a function that returns one or more `narrow_array()`s:
+…or based on a function that returns one or more `arch_array()`s:
 
 ``` r
 counter <- -1
 rows_per_chunk <- 5
 csv_file <- readr::readr_example("mtcars.csv")
-schema <- as_narrow_array(
+schema <- as_arch_array(
   readr::read_csv(
     csv_file,
     n_max = 0,
@@ -162,7 +168,7 @@ schema <- as_narrow_array(
   )
 )$schema
 
-stream2 <- narrow_array_stream_function(schema, function() {
+stream2 <- arch_array_stream_function(schema, function() {
   counter <<- counter + 1L
   result <- readr::read_csv(
     csv_file,
@@ -180,10 +186,10 @@ stream2 <- narrow_array_stream_function(schema, function() {
 ```
 
 You can pass these to Arrow as a `RecordBatchReader` using
-`narrow_array_stream_to_arrow()`:
+`arch_array_stream_to_arrow()`:
 
 ``` r
-reader <- narrow_array_stream_to_arrow(stream2)
+reader <- arch_array_stream_to_arrow(stream2)
 as.data.frame(reader$read_table())
 #> # A tibble: 32 × 11
 #>      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
@@ -205,7 +211,7 @@ Round-turn operations for `RecordBatch` also work:
 
 ``` r
 df <- readr::read_csv(csv_file, show_col_types=FALSE)
-as.data.frame(from_narrow_array(as_narrow_array(df), arrow::RecordBatch)) 
+as.data.frame(from_arch_array(as_arch_array(df), arrow::RecordBatch)) 
 #> # A tibble: 32 × 11
 #>      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
 #>    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
@@ -227,15 +233,15 @@ as.data.frame(from_narrow_array(as_narrow_array(df), arrow::RecordBatch))
 The C data interface is ABI stable (and a version of the stream
 interface will be ABI stable in the future) so you can access the
 underlying pointers in compiled code from any R package (or inline C or
-C++ code). A `narrow_schema()` is an external pointer to a
-`struct ArrowSchema`, a `narrow_array_data()` is an external pointer to
-a `struct ArrowArray`, and a `narrow_array()` is a `list()` of a
-`narrow_schema()` and a `narrow_array_data()`.
+C++ code). A `arch_schema()` is an external pointer to a
+`struct ArrowSchema`, a `arch_array_data()` is an external pointer to
+a `struct ArrowArray`, and a `arch_array()` is a `list()` of a
+`arch_schema()` and a `arch_array_data()`.
 
 ``` c
 #include <R.h>
 #include <Rinternals.h>
-#include "narrow.h"
+#include "arch.h"
 
 SEXP extract_null_count(SEXP array_data_xptr) {
   struct ArrowArray* array_data = (struct ArrowArray*) R_ExternalPtrAddr(array_data_xptr);
@@ -244,7 +250,7 @@ SEXP extract_null_count(SEXP array_data_xptr) {
 ```
 
 ``` r
-.Call("extract_null_count", as_narrow_array(c(NA, NA, 1:5))$array_data)
+.Call("extract_null_count", as_arch_array(c(NA, NA, 1:5))$array_data)
 #> [1] 2
 ```
 
