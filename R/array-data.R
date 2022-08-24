@@ -7,31 +7,31 @@
 #' @param null_count The number of NULL values or -1 if this hasn't been
 #'   computed yet.
 #' @param offset The number of elements to skip at the front of the array.
-#' @param children Child vectors as a [list()] coerced by [as_narrow_array_data()]
+#' @param children Child vectors as a [list()] coerced by [as_arch_array_data()]
 #' @param dictionary Dictionary array for dictionary types.
-#' @param x An object to convert to an narrow_array
+#' @param x An object to convert to an arch_array
 #' @param ... Passed to S3 Methods
 #'
-#' @return An object of class "narrow_array_data"
+#' @return An object of class "arch_array_data"
 #' @export
 #'
 #' @examples
-#' narrow_array_data(1:100, 100)
+#' arch_array_data(1:100, 100)
 #'
-narrow_array_data <- function(buffers = NULL, length = 0, null_count = -1, offset = 0,
+arch_array_data <- function(buffers = NULL, length = 0, null_count = -1, offset = 0,
                              children = NULL, dictionary = NULL) {
   buffers <- if (is.null(buffers)) {
     NULL
   } else if (is.list(buffers)) {
-    lapply(buffers, as_narrow_buffer)
+    lapply(buffers, as_arch_buffer)
   } else {
-    list(as_narrow_buffer(buffers))
+    list(as_arch_buffer(buffers))
   }
-  children <- if (is.null(children)) NULL else lapply(children, as_narrow_array_data)
-  dictionary <- if (is.null(dictionary)) NULL else as_narrow_array_data(dictionary)
+  children <- if (is.null(children)) NULL else lapply(children, as_arch_array_data)
+  dictionary <- if (is.null(dictionary)) NULL else as_arch_array_data(dictionary)
 
   .Call(
-    narrow_c_array_from_sexp,
+    arch_c_array_from_sexp,
     buffers,
     length,
     null_count,
@@ -41,67 +41,67 @@ narrow_array_data <- function(buffers = NULL, length = 0, null_count = -1, offse
   )
 }
 
-#' @rdname narrow_array_data
+#' @rdname arch_array_data
 #' @export
-narrow_array_data_info <- function(x, ...) {
-  .Call(narrow_c_array_info, x)
+arch_array_data_info <- function(x, ...) {
+  .Call(arch_c_array_info, x)
 }
 
-#' @rdname narrow_array_data
+#' @rdname arch_array_data
 #' @export
-as_narrow_array_data <- function(x, ...) {
-  UseMethod("as_narrow_array_data")
+as_arch_array_data <- function(x, ...) {
+  UseMethod("as_arch_array_data")
 }
 
-#' @rdname narrow_array_data
+#' @rdname arch_array_data
 #' @export
-as_narrow_array_data.narrow_array_data <- function(x, ...) {
+as_arch_array_data.arch_array_data <- function(x, ...) {
   x
 }
 
-#' @rdname narrow_array_data
+#' @rdname arch_array_data
 #' @export
-as_narrow_buffer <- function(x, ...) {
-  UseMethod("as_narrow_buffer")
+as_arch_buffer <- function(x, ...) {
+  UseMethod("as_arch_buffer")
 }
 
-#' @rdname narrow_array_data
+#' @rdname arch_array_data
 #' @export
-as_narrow_buffer.default <- function(x, ...) {
-  # sanitized in narrow_c_array_from_sexp()
+as_arch_buffer.default <- function(x, ...) {
+  # sanitized in arch_c_array_from_sexp()
   x
 }
 
 
 #' @export
-length.narrow_array_data <- function(x, ...) {
-  length(narrow_array_data_info(x))
+length.arch_array_data <- function(x, ...) {
+  length(arch_array_data_info(x))
 }
 
 #' @export
-names.narrow_array_data <- function(x, ...) {
-  names(narrow_array_data_info(x))
+names.arch_array_data <- function(x, ...) {
+  names(arch_array_data_info(x))
 }
 
 #' @export
-`[[.narrow_array_data` <- function(x, i, ...) {
-  narrow_array_data_info(x)[[i]]
+`[[.arch_array_data` <- function(x, i, ...) {
+  arch_array_data_info(x)[[i]]
 }
 
 #' @export
-`$.narrow_array_data` <- function(x, i, ...) {
-  narrow_array_data_info(x)[[i]]
+`$.arch_array_data` <- function(x, i, ...) {
+  arch_array_data_info(x)[[i]]
 }
 
 #' @export
-format.narrow_array_data <- function(x, ...) {
-  sprintf("<narrow_array_data at %s>", xptr_addr(x))
+format.arch_array_data <- function(x, ...) {
+  sprintf("<arch_array_data at %s>", xptr_addr(x))
 }
 
 #' @export
-print.narrow_array_data <- function(x, ..., indent.str = "") {
+print.arch_array_data <- function(x, ..., indent.str = "") {
   cat(sprintf("%s%s\n", indent.str, format(x)))
-  info <- narrow_array_data_info(x)
+  info <- arch_array_data_info(x)
   for (nm in c("length", "null_count", "offset")) {
     cat(sprintf("%s- %s: %s\n", indent.str, nm, format(info[[nm]])))
   }

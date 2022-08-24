@@ -1,13 +1,13 @@
 
-#ifndef narrow_SCHEMA_H_INCLUDED
-#define narrow_SCHEMA_H_INCLUDED
+#ifndef arch_SCHEMA_H_INCLUDED
+#define arch_SCHEMA_H_INCLUDED
 
 #include <R.h>
 #include <Rinternals.h>
 #include <memory.h>
 #include <stdint.h>
 #include <string.h>
-#include "narrow/narrow.h"
+#include "arch/arch.h"
 #include "util.h"
 
 void finalize_schema_xptr(SEXP schema_xptr);
@@ -16,8 +16,8 @@ unsigned char* metadata_from_sexp(SEXP metadata_sexp, const char* arg);
 SEXP sexp_from_metadata(unsigned char* metadata);
 
 static inline struct ArrowSchema* schema_from_xptr(SEXP schema_xptr, const char* arg) {
-  if (!Rf_inherits(schema_xptr, "narrow_schema")) {
-    Rf_error("`%s` must be an object created with narrow_schema()", arg);
+  if (!Rf_inherits(schema_xptr, "arch_schema")) {
+    Rf_error("`%s` must be an object created with arch_schema()", arg);
   }
 
   struct ArrowSchema* schema = (struct ArrowSchema*) R_ExternalPtrAddr(schema_xptr);
@@ -42,14 +42,14 @@ static inline struct ArrowSchema* nullable_schema_from_xptr(SEXP schema_xptr, co
 
 static inline SEXP schema_xptr_new(struct ArrowSchema* schema) {
   SEXP schema_xptr = PROTECT(R_MakeExternalPtr(schema, R_NilValue, R_NilValue));
-  Rf_setAttrib(schema_xptr, R_ClassSymbol, Rf_mkString("narrow_schema"));
+  Rf_setAttrib(schema_xptr, R_ClassSymbol, Rf_mkString("arch_schema"));
   UNPROTECT(1);
   return schema_xptr;
 }
 
 static inline void schema_export(SEXP schema_xptr, struct ArrowSchema* schema_copy) {
   struct ArrowSchema* schema = schema_from_xptr(schema_xptr, "schema");
-  narrow_schema_deep_copy(schema_copy, schema);
+  arch_schema_deep_copy(schema_copy, schema);
 }
 
 #endif

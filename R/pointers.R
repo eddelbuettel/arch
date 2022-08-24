@@ -1,100 +1,100 @@
 
 #' Danger zone: low-level pointer operations
 #'
-#' @param ptr,ptr_src,ptr_dst An external pointer to a [narrow_schema()],
-#'   a [narrow_array_data()], or a [narrow_array_stream()].
-#' @param cls One of "narrow_schema", "narrow_array_data", or
-#'   "narrow_array_stream".
+#' @param ptr,ptr_src,ptr_dst An external pointer to a [arch_schema()],
+#'   a [arch_array_data()], or a [arch_array_stream()].
+#' @param cls One of "arch_schema", "arch_array_data", or
+#'   "arch_array_stream".
 #'
 #' @export
 #'
-narrow_pointer_is_valid <- function(ptr) {
-  .Call(narrow_c_pointer_is_valid, ptr)
+arch_pointer_is_valid <- function(ptr) {
+  .Call(arch_c_pointer_is_valid, ptr)
 }
 
-#' @rdname narrow_pointer_is_valid
+#' @rdname arch_pointer_is_valid
 #' @export
-narrow_pointer_release <- function(ptr) {
-  invisible(.Call(narrow_c_pointer_release, ptr))
+arch_pointer_release <- function(ptr) {
+  invisible(.Call(arch_c_pointer_release, ptr))
 }
 
-#' @rdname narrow_pointer_is_valid
+#' @rdname arch_pointer_is_valid
 #' @export
-narrow_pointer_move <- function(ptr_src, ptr_dst) {
-  invisible(.Call(narrow_c_pointer_move, ptr_src, ptr_dst))
+arch_pointer_move <- function(ptr_src, ptr_dst) {
+  invisible(.Call(arch_c_pointer_move, ptr_src, ptr_dst))
 }
 
-#' @rdname narrow_pointer_is_valid
+#' @rdname arch_pointer_is_valid
 #' @export
-narrow_pointer_export <- function(ptr_src, ptr_dst) {
-  if (inherits(ptr_src, "narrow_schema")) {
-    invisible(.Call(narrow_c_export_schema, ptr_src, ptr_dst))
-  } else if (inherits(ptr_src, "narrow_array_data")) {
-    invisible(.Call(narrow_c_export_array_data, ptr_src, ptr_dst))
-  } else if (inherits(ptr_src, "narrow_array_stream")) {
+arch_pointer_export <- function(ptr_src, ptr_dst) {
+  if (inherits(ptr_src, "arch_schema")) {
+    invisible(.Call(arch_c_export_schema, ptr_src, ptr_dst))
+  } else if (inherits(ptr_src, "arch_array_data")) {
+    invisible(.Call(arch_c_export_array_data, ptr_src, ptr_dst))
+  } else if (inherits(ptr_src, "arch_array_stream")) {
     invisible(
       .Call(
-        narrow_c_export_array_stream,
+        arch_c_export_array_stream,
         ptr_src,
-        narrow_from_pointer(ptr_dst, "narrow_array_stream")
+        arch_from_pointer(ptr_dst, "arch_array_stream")
       )
     )
   } else {
     stop(
-      "`ptr_src` must inherit from 'narrow_schema', 'narrow_array_data', or 'narrow_array_stream'"
+      "`ptr_src` must inherit from 'arch_schema', 'arch_array_data', or 'arch_array_stream'"
     )
   }
 }
 
-#' @rdname narrow_pointer_is_valid
+#' @rdname arch_pointer_is_valid
 #' @export
-narrow_allocate_schema <- function() {
-  .Call(narrow_c_allocate_schema)
+arch_allocate_schema <- function() {
+  .Call(arch_c_allocate_schema)
 }
 
-#' @rdname narrow_pointer_is_valid
+#' @rdname arch_pointer_is_valid
 #' @export
-narrow_allocate_array_data <- function() {
-  .Call(narrow_c_allocate_array_data)
+arch_allocate_array_data <- function() {
+  .Call(arch_c_allocate_array_data)
 }
 
-#' @rdname narrow_pointer_is_valid
+#' @rdname arch_pointer_is_valid
 #' @export
-narrow_allocate_array_stream <- function() {
-  .Call(narrow_c_allocate_array_stream)
+arch_allocate_array_stream <- function() {
+  .Call(arch_c_allocate_array_stream)
 }
 
 # only needed for arrow package before 7.0.0
-narrow_pointer_addr_dbl <- function(ptr) {
-  .Call(narrow_c_pointer_addr_dbl, ptr)
+arch_pointer_addr_dbl <- function(ptr) {
+  .Call(arch_c_pointer_addr_dbl, ptr)
 }
 
-#' @rdname narrow_pointer_is_valid
+#' @rdname arch_pointer_is_valid
 #' @export
-narrow_pointer_addr_chr <- function(ptr) {
-  .Call(narrow_c_pointer_addr_chr, ptr)
+arch_pointer_addr_chr <- function(ptr) {
+  .Call(arch_c_pointer_addr_chr, ptr)
 }
 
-#' @rdname narrow_pointer_is_valid
+#' @rdname arch_pointer_is_valid
 #' @export
-narrow_schema_from_pointer <- function(ptr) {
-  narrow_from_pointer(ptr, "narrow_schema")
+arch_schema_from_pointer <- function(ptr) {
+  arch_from_pointer(ptr, "arch_schema")
 }
 
-#' @rdname narrow_pointer_is_valid
+#' @rdname arch_pointer_is_valid
 #' @export
-narrow_array_data_from_pointer <- function(ptr) {
-  narrow_from_pointer(ptr, "narrow_array_data")
+arch_array_data_from_pointer <- function(ptr) {
+  arch_from_pointer(ptr, "arch_array_data")
 }
 
-#' @rdname narrow_pointer_is_valid
+#' @rdname arch_pointer_is_valid
 #' @export
-narrow_array_stream_from_pointer <- function(ptr) {
-  narrow_from_pointer(ptr, "narrow_array_stream")
+arch_array_stream_from_pointer <- function(ptr) {
+  arch_from_pointer(ptr, "arch_array_stream")
 }
 
-#' @rdname narrow_pointer_is_valid
+#' @rdname arch_pointer_is_valid
 #' @export
-narrow_from_pointer <- function(ptr, cls) {
-  structure(.Call(narrow_c_pointer, ptr), class = cls)
+arch_from_pointer <- function(ptr, cls) {
+  structure(.Call(arch_c_pointer, ptr), class = cls)
 }

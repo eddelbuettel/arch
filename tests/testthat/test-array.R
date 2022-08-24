@@ -1,47 +1,47 @@
 
-test_that("narrow_array class works", {
-  v <- narrow_array()
-  expect_s3_class(v, "narrow_array")
-  expect_identical(as_narrow_array(v), v)
-  expect_match(format(v), "narrow_array n\\[0\\]")
-  expect_output(print(v), "narrow_array n\\[0\\]")
+test_that("arch_array class works", {
+  v <- arch_array()
+  expect_s3_class(v, "arch_array")
+  expect_identical(as_arch_array(v), v)
+  expect_match(format(v), "arch_array n\\[0\\]")
+  expect_output(print(v), "arch_array n\\[0\\]")
 })
 
-test_that("narrow_array_validate works", {
-  v <- narrow_array()
-  expect_identical(narrow_array_validate(v), v)
+test_that("arch_array_validate works", {
+  v <- arch_array()
+  expect_identical(arch_array_validate(v), v)
 
   expect_error(
-    narrow_array(narrow_schema("i"), narrow_array_data()),
+    arch_array(arch_schema("i"), arch_array_data()),
     "Expected 2 buffers"
   )
 
   expect_error(
-    narrow_array(narrow_schema("n"), narrow_array_data(children = list(narrow_array_data()))),
+    arch_array(arch_schema("n"), arch_array_data(children = list(arch_array_data()))),
     "does not match number of children of schema"
   )
 
   expect_error(
-    narrow_array(
-      narrow_schema("+s", children = list(narrow_schema("u"))),
-      narrow_array_data(buffers = list(NULL), children = list(narrow_array_data()))
+    arch_array(
+      arch_schema("+s", children = list(arch_schema("u"))),
+      arch_array_data(buffers = list(NULL), children = list(arch_array_data()))
     ),
     "Expected 3 buffers"
   )
 
   expect_error(
-    narrow_array(
-      narrow_schema("i", dictionary = narrow_schema("u")),
-      narrow_array_data(buffers = list(NULL, 1L), dictionary = narrow_array_data())
+    arch_array(
+      arch_schema("i", dictionary = arch_schema("u")),
+      arch_array_data(buffers = list(NULL, 1L), dictionary = arch_array_data())
     ),
     "Expected 3 buffers"
   )
 
-  expect_silent(narrow_array(narrow_schema("i"), narrow_array_data(buffers = list(NULL, NULL))))
+  expect_silent(arch_array(arch_schema("i"), arch_array_data(buffers = list(NULL, NULL))))
 })
 
 test_that("subset-assign on a array does validation", {
-  v <- narrow_array(narrow_schema("i"), narrow_array_data(buffers = list(NULL, 1L), null_count = 0, length = 1))
-  expect_silent(v$schema <- narrow_schema("i"))
-  expect_error(v$schema <- narrow_schema("u"), "Expected 3 buffers")
+  v <- arch_array(arch_schema("i"), arch_array_data(buffers = list(NULL, 1L), null_count = 0, length = 1))
+  expect_silent(v$schema <- arch_schema("i"))
+  expect_error(v$schema <- arch_schema("u"), "Expected 3 buffers")
 })

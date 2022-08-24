@@ -1,7 +1,7 @@
 #define R_NO_REMAP
 #include <R.h>
 #include <Rinternals.h>
-#include "narrow/narrow.h"
+#include "arch/arch.h"
 #include "array-stream.h"
 #include "array.h"
 #include "util.h"
@@ -19,7 +19,7 @@ void finalize_array_stream_xptr(SEXP array_stream_xptr) {
 }
 
 // accessors for R-level access
-SEXP narrow_c_narrow_array_stream_get_schema(SEXP array_stream_xptr) {
+SEXP arch_c_arch_array_stream_get_schema(SEXP array_stream_xptr) {
   struct ArrowArrayStream* array_stream = array_stream_from_xptr(array_stream_xptr, "array_stream");
 
   struct ArrowSchema* schema = (struct ArrowSchema*) malloc(sizeof(struct ArrowSchema));
@@ -44,7 +44,7 @@ SEXP narrow_c_narrow_array_stream_get_schema(SEXP array_stream_xptr) {
   return schema_xptr;
 }
 
-SEXP narrow_c_narrow_array_stream_get_next(SEXP array_stream_xptr) {
+SEXP arch_c_arch_array_stream_get_next(SEXP array_stream_xptr) {
   struct ArrowArrayStream* array_stream = array_stream_from_xptr(array_stream_xptr, "array_stream");
 
   struct ArrowArray* array_data = (struct ArrowArray*) malloc(sizeof(struct ArrowArray));

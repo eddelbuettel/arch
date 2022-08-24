@@ -1,9 +1,9 @@
 
 #' Convert Arrow vectors to R objects
 #'
-#' Note that [from_narrow_array()] dispatches on `ptype`
+#' Note that [from_arch_array()] dispatches on `ptype`
 #'
-#' @param x An [narrow_array()]
+#' @param x An [arch_array()]
 #' @param ptype An R object to use as a prototype
 #' @param ... Passed to S3 methods
 #'
@@ -11,23 +11,23 @@
 #' @export
 #'
 #' @examples
-#' from_narrow_array(as_narrow_array(c(TRUE, FALSE, NA)), logical())
+#' from_arch_array(as_arch_array(c(TRUE, FALSE, NA)), logical())
 #'
-from_narrow_array <- function(x, ptype = narrow_default_ptype(x$schema), ...) {
-  UseMethod("from_narrow_array", ptype)
+from_arch_array <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+  UseMethod("from_arch_array", ptype)
 }
 
-#' @rdname from_narrow_array
+#' @rdname from_arch_array
 #' @export
-from_narrow_array.default <- function(x, ptype = narrow_default_ptype(x$schema), ...) {
-  assert_x_narrow_array(x)
+from_arch_array.default <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+  assert_x_arch_array(x)
   stop_cant_convert(x, ptype)
 }
 
-#' @rdname from_narrow_array
+#' @rdname from_arch_array
 #' @export
-from_narrow_array.NULL <- function(x, ptype = narrow_default_ptype(x$schema), ...) {
-  if (!inherits(x, "narrow_array")) {
+from_arch_array.NULL <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+  if (!inherits(x, "arch_array")) {
     NextMethod()
   }
 
@@ -41,81 +41,81 @@ from_narrow_array.NULL <- function(x, ptype = narrow_default_ptype(x$schema), ..
   NULL
 }
 
-#' @rdname from_narrow_array
+#' @rdname from_arch_array
 #' @export
-from_narrow_array.logical <- function(x, ptype = narrow_default_ptype(x$schema), ...) {
+from_arch_array.logical <- function(x, ptype = arch_default_ptype(x$schema), ...) {
   if (!is.null(x$schema$dictionary)) {
     return(convert_arrow_fallback(x, ptype))
   }
 
-  with_arrow_fallback(.Call(narrow_c_logical_from_array, x), x, ptype)
+  with_arrow_fallback(.Call(arch_c_logical_from_array, x), x, ptype)
 }
 
-#' @rdname from_narrow_array
+#' @rdname from_arch_array
 #' @export
-from_narrow_array.integer <- function(x, ptype = narrow_default_ptype(x$schema), ...) {
+from_arch_array.integer <- function(x, ptype = arch_default_ptype(x$schema), ...) {
   if (!is.null(x$schema$dictionary)) {
     return(convert_arrow_fallback(x, ptype))
   }
 
-  with_arrow_fallback(.Call(narrow_c_integer_from_array, x), x, ptype)
+  with_arrow_fallback(.Call(arch_c_integer_from_array, x), x, ptype)
 }
 
-from_narrow_array_integer <- function(x) {
-  with_arrow_fallback(.Call(narrow_c_integer_from_array, x), x, integer())
+from_arch_array_integer <- function(x) {
+  with_arrow_fallback(.Call(arch_c_integer_from_array, x), x, integer())
 }
 
-#' @rdname from_narrow_array
+#' @rdname from_arch_array
 #' @export
-from_narrow_array.double <- function(x, ptype = narrow_default_ptype(x$schema), ...) {
+from_arch_array.double <- function(x, ptype = arch_default_ptype(x$schema), ...) {
   if (!is.null(x$schema$dictionary)) {
     return(convert_arrow_fallback(x, ptype))
   }
 
-  with_arrow_fallback(.Call(narrow_c_double_from_array, x), x, ptype)
+  with_arrow_fallback(.Call(arch_c_double_from_array, x), x, ptype)
 }
 
-#' @rdname from_narrow_array
+#' @rdname from_arch_array
 #' @export
-from_narrow_array.raw <- function(x, ptype = narrow_default_ptype(x$schema), ...) {
+from_arch_array.raw <- function(x, ptype = arch_default_ptype(x$schema), ...) {
   if (!is.null(x$schema$dictionary)) {
     return(convert_arrow_fallback(x, ptype))
   }
 
-  with_arrow_fallback(.Call(narrow_c_raw_from_array, x), ptype)
+  with_arrow_fallback(.Call(arch_c_raw_from_array, x), ptype)
 }
 
-#' @rdname from_narrow_array
+#' @rdname from_arch_array
 #' @export
-from_narrow_array.character <- function(x, ptype = narrow_default_ptype(x$schema), ...) {
+from_arch_array.character <- function(x, ptype = arch_default_ptype(x$schema), ...) {
   if (is.null(x$schema$dictionary)) {
-    with_arrow_fallback(.Call(narrow_c_character_from_array, x), x, ptype)
+    with_arrow_fallback(.Call(arch_c_character_from_array, x), x, ptype)
   } else {
-    indices <- from_narrow_array_integer(x) + 1L
-    dictionary <- narrow_array(x$schema$dictionary, x$array_data$dictionary)
-    from_narrow_array(dictionary, character())[indices]
+    indices <- from_arch_array_integer(x) + 1L
+    dictionary <- arch_array(x$schema$dictionary, x$array_data$dictionary)
+    from_arch_array(dictionary, character())[indices]
   }
 }
 
-#' @rdname from_narrow_array
+#' @rdname from_arch_array
 #' @export
-from_narrow_array.factor <- function(x, ptype = narrow_default_ptype(x$schema), ...) {
-  assert_x_narrow_array(x)
+from_arch_array.factor <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+  assert_x_arch_array(x)
   stopifnot(!is.null(x$schema$dictionary))
 
   # because of weirdness with UseMethod()
   if (missing(ptype)) {
-    ptype <- narrow_default_ptype(x$schema)
+    ptype <- arch_default_ptype(x$schema)
   }
 
   # get indices
-  indices <- from_narrow_array_integer(x) + 1L
+  indices <- from_arch_array_integer(x) + 1L
 
   # try to detect levels if none were given
   levels <- levels(ptype)
   if (identical(levels, character())) {
-    dictionary <- narrow_array(x$schema$dictionary, x$array_data$dictionary)
-    levels <- from_narrow_array(dictionary, character())
+    dictionary <- arch_array(x$schema$dictionary, x$array_data$dictionary)
+    levels <- from_arch_array(dictionary, character())
   }
 
   class(indices) <- "factor"
@@ -123,10 +123,10 @@ from_narrow_array.factor <- function(x, ptype = narrow_default_ptype(x$schema), 
   indices
 }
 
-#' @rdname from_narrow_array
+#' @rdname from_arch_array
 #' @export
-from_narrow_array.data.frame <- function(x, ptype = narrow_default_ptype(x$schema), ...) {
-  assert_x_narrow_array(x)
+from_arch_array.data.frame <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+  assert_x_arch_array(x)
   if (!is.null(x$schema$dictionary)) {
     return(convert_arrow_fallback(x, ptype))
   }
@@ -134,20 +134,20 @@ from_narrow_array.data.frame <- function(x, ptype = narrow_default_ptype(x$schem
 
   # because of weirdness with UseMethod()
   if (missing(ptype)) {
-    ptype <- narrow_default_ptype(x$schema)
+    ptype <- arch_default_ptype(x$schema)
   }
 
   child_schemas <- x$schema$children
 
   if (ncol(ptype) == 0) {
-    ptype <- narrow_default_ptype(x$schema)
+    ptype <- arch_default_ptype(x$schema)
   } else {
     stopifnot(identical(ncol(ptype), length(child_schemas)))
   }
 
   child_arrays <- x$array_data$children
-  child_arrays <- Map(narrow_array, child_schemas, child_arrays)
-  result <- Map(from_narrow_array, child_arrays, ptype)
+  child_arrays <- Map(arch_array, child_schemas, child_arrays)
+  result <- Map(from_arch_array, child_arrays, ptype)
   names(result) <- names(ptype)
   new_data_frame(result, nrow = as.integer(as.numeric(x$array_data$length)))
 }
@@ -167,7 +167,7 @@ convert_arrow_fallback <- function(x, ptype) {
     stop("Package 'vctrs' required for fallback conversion", call. = FALSE)
   }
 
-  x_arrow <- from_narrow_array(x, arrow::Array)
+  x_arrow <- from_arch_array(x, arrow::Array)
 
   # support dictionary encoding for any type
   if (x_arrow$type_id == arrow::Type$DICTIONARY) {
@@ -184,9 +184,9 @@ convert_arrow_fallback <- function(x, ptype) {
   }
 }
 
-assert_x_narrow_array <- function(x) {
-  if (!inherits(x, "narrow_array")) {
-    stop("`x` is not an `narrow_array()`", call. = FALSE)
+assert_x_arch_array <- function(x) {
+  if (!inherits(x, "arch_array")) {
+    stop("`x` is not an `arch_array()`", call. = FALSE)
   }
 }
 

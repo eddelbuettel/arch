@@ -4,31 +4,31 @@
 #' @inheritParams parse_format
 #' @param metadata A named character vector of [list()] of [raw()]
 #'   containing key/value metadata.
-#' @param schema A schema created with [narrow_schema()]
+#' @param schema A schema created with [arch_schema()]
 #' @param name An optional name
-#' @param flags Flags to set on input (see [narrow_schema_flags()])
-#' @param children A [list()] of objects created using [narrow_schema()].
-#' @param dictionary An [narrow_schema()] if this is a dictionary type.
+#' @param flags Flags to set on input (see [arch_schema_flags()])
+#' @param children A [list()] of objects created using [arch_schema()].
+#' @param dictionary An [arch_schema()] if this is a dictionary type.
 #' @param dictionary_ordered `TRUE` if the `dictionary` array is ordered
 #' @param nullable `TRUE` if the type is semantically nullable
 #' @param map_keys_sorted `TRUE` if the keys for a map have been sorted
 #' @param recursive Use `TRUE` to serialize the schema recursively
-#' @param x An object to convert to an [narrow_schema()]
+#' @param x An object to convert to an [arch_schema()]
 #' @param ... Passed to S3 methods
 #'
-#' @return An external pointer with class 'narrow_schema'
+#' @return An external pointer with class 'arch_schema'
 #' @export
 #'
-narrow_schema <- function(format, name = "", metadata = NULL,
-                         flags = narrow_schema_flags(),
+arch_schema <- function(format, name = "", metadata = NULL,
+                         flags = arch_schema_flags(),
                          children = NULL, dictionary = NULL) {
   metadata <- metadata_to_list_of_raw(metadata)
-  .Call(narrow_c_schema_xptr_new, format, name, metadata, flags, children, dictionary)
+  .Call(arch_c_schema_xptr_new, format, name, metadata, flags, children, dictionary)
 }
 
-#' @rdname narrow_schema
+#' @rdname arch_schema
 #' @export
-narrow_schema_flags <- function(dictionary_ordered = FALSE, nullable = TRUE,
+arch_schema_flags <- function(dictionary_ordered = FALSE, nullable = TRUE,
                                map_keys_sorted = FALSE) {
   flags <- 0L
   if (dictionary_ordered) {
@@ -44,42 +44,42 @@ narrow_schema_flags <- function(dictionary_ordered = FALSE, nullable = TRUE,
   flags
 }
 
-#' @rdname narrow_schema
+#' @rdname arch_schema
 #' @export
-narrow_schema_deep_copy <- function(schema) {
-  .Call(narrow_c_schema_deep_copy, as_narrow_schema(schema))
+arch_schema_deep_copy <- function(schema) {
+  .Call(arch_c_schema_deep_copy, as_arch_schema(schema))
 }
 
-#' @rdname narrow_schema
+#' @rdname arch_schema
 #' @export
-as_narrow_schema <- function(x, ...) {
-  UseMethod("as_narrow_schema")
+as_arch_schema <- function(x, ...) {
+  UseMethod("as_arch_schema")
 }
 
-#' @rdname narrow_schema
+#' @rdname arch_schema
 #' @export
-as_narrow_schema.narrow_schema <- function(x, ...) {
+as_arch_schema.arch_schema <- function(x, ...) {
   x
 }
 
-#' @rdname narrow_schema
+#' @rdname arch_schema
 #' @export
-as_narrow_schema.character <- function(x, ...) {
-  narrow_schema(x)
+as_arch_schema.character <- function(x, ...) {
+  arch_schema(x)
 }
 
-#' @rdname narrow_schema
+#' @rdname arch_schema
 #' @export
-narrow_schema_info <- function(x, ..., recursive = FALSE) {
-  result <- .Call(narrow_c_schema_data, x)
+arch_schema_info <- function(x, ..., recursive = FALSE) {
+  result <- .Call(arch_c_schema_data, x)
   result$metadata <- list_of_raw_to_metadata(result$metadata)
   if (recursive) {
     if (!is.null(result$children)) {
-      result$children <- lapply(result$children, narrow_schema_info, recursive = TRUE)
+      result$children <- lapply(result$children, arch_schema_info, recursive = TRUE)
     }
 
     if (!is.null(result$dictionary)) {
-      result$dictionary <- narrow_schema_info(result$dictionary)
+      result$dictionary <- arch_schema_info(result$dictionary)
     }
   }
 
@@ -129,47 +129,47 @@ list_of_raw_to_metadata <- function(metadata) {
 
 
 #' @export
-length.narrow_schema <- function(x, ...) {
-  length(narrow_schema_info(x))
+length.arch_schema <- function(x, ...) {
+  length(arch_schema_info(x))
 }
 
 #' @export
-names.narrow_schema <- function(x, ...) {
-  names(narrow_schema_info(x))
+names.arch_schema <- function(x, ...) {
+  names(arch_schema_info(x))
 }
 
 #' @export
-`[[.narrow_schema` <- function(x, i, ...) {
-  narrow_schema_info(x)[[i]]
+`[[.arch_schema` <- function(x, i, ...) {
+  arch_schema_info(x)[[i]]
 }
 
 #' @export
-`$.narrow_schema` <- function(x, i, ...) {
-  narrow_schema_info(x)[[i]]
+`$.arch_schema` <- function(x, i, ...) {
+  arch_schema_info(x)[[i]]
 }
 
 #' @export
-`[[<-.narrow_schema` <- function(x, i, value) {
-  info <- narrow_schema_info(x)
+`[[<-.arch_schema` <- function(x, i, value) {
+  info <- arch_schema_info(x)
   info[[i]] <- value
-  do.call(narrow_schema, info)
+  do.call(arch_schema, info)
 }
 
 #' @export
-`$<-.narrow_schema` <- function(x, name, value) {
+`$<-.arch_schema` <- function(x, name, value) {
   x[[name]] <- value
   x
 }
 
 #' @export
-format.narrow_schema <- function(x, ...) {
-  sprintf("<narrow_schema '%s' at %s>", narrow_schema_info(x)$format, xptr_addr(x))
+format.arch_schema <- function(x, ...) {
+  sprintf("<arch_schema '%s' at %s>", arch_schema_info(x)$format, xptr_addr(x))
 }
 
 #' @export
-print.narrow_schema <- function(x, ..., indent.str = "") {
+print.arch_schema <- function(x, ..., indent.str = "") {
   cat(paste0(indent.str, format(x), "\n"))
-  info <- narrow_schema_info(x)
+  info <- arch_schema_info(x)
   for (nm in c("format", "name")) {
     cat(sprintf("%s- %s: %s\n", indent.str, nm, format(info[[nm]])))
   }
@@ -212,8 +212,8 @@ print.narrow_schema <- function(x, ..., indent.str = "") {
 
 #' @export
 #' @importFrom utils str
-str.narrow_schema <- function(object, ...) {
+str.arch_schema <- function(object, ...) {
   cat(paste0(format(object), " "))
-  str(narrow_schema_info(object), ...)
+  str(arch_schema_info(object), ...)
   invisible(object)
 }
