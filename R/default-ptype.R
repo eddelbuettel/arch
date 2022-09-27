@@ -27,7 +27,7 @@ arch_default_ptype <- function(schema) {
     n =, b = logical(),
     c =, C =, s =, S =, i = integer(),
     d =, I =, l =, L =, e =, f =, g = double(),
-    u =, U = character(),
+    u =, U =, Z = character(),
     `+s` = {
       children_ptype <- lapply(schema$children, arch_default_ptype)
       children_names <- lapply(schema$children, "[[", "name")
