@@ -6,7 +6,7 @@ Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Description: The 'Apache Arrow' project offers a zero-dependency C interface which
  this package uses to create and proces 'Arrow' objects -- without requiring the 
  'arrow' package. This package builds upon a lot of earlier work in package
- 'narrow' (formerly also named 'sparrow', 'carrow', 'arrowc') by Dewey.
+ 'narrow' (formerly also named 'sparrow', 'carrow', 'arrowc', 'arrowvctrs') by Dewey.
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

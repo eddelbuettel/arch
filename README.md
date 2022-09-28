@@ -11,8 +11,9 @@ We found it very useful in testing interacting with Arrow objects _without
 requiring the full weight of the `arrow` package_ and have used it for many
 months along with small extensions such as a generalized C-level API export
 from an earlier fork of ours.  As `narrow` appears to have stalled upstream,
-and/or is being replaced by a C++-only variant, we decided to adopt and
-maintain this variant as it is useful for its _Arrow R and C Helper_ functions.
+and while the potential replacement `nanoarrow` is not yet feature-equivalent
+or released, we decided to adopt and maintain this variant as it is useful
+for its _Arrow R and C Helper_ functions.
 
 The remainder of README.md is the original, with only a minimal `s/narrow/arch`.
 
