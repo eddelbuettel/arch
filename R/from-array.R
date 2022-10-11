@@ -14,12 +14,16 @@
 #' from_arch_array(as_arch_array(c(TRUE, FALSE, NA)), logical())
 #'
 from_arch_array <- function(x, ptype = arch_default_ptype(x$schema), ...) {
-  UseMethod("from_arch_array", ptype)
+    message("from_arch_array (generic)")
+    #print(ptype)
+    #print(methods("from_arch_array"))
+    UseMethod("from_arch_array", ptype)
 }
 
 #' @rdname from_arch_array
 #' @export
 from_arch_array.default <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+    message("from_arch_array.default")
   assert_x_arch_array(x)
   stop_cant_convert(x, ptype)
 }
@@ -27,6 +31,7 @@ from_arch_array.default <- function(x, ptype = arch_default_ptype(x$schema), ...
 #' @rdname from_arch_array
 #' @export
 from_arch_array.NULL <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+    message("from_arch_array.NULL")
   if (!inherits(x, "arch_array")) {
     NextMethod()
   }
@@ -54,6 +59,7 @@ from_arch_array.logical <- function(x, ptype = arch_default_ptype(x$schema), ...
 #' @rdname from_arch_array
 #' @export
 from_arch_array.integer <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+    message("from_arch_array.integer")
   if (!is.null(x$schema$dictionary)) {
     return(convert_arrow_fallback(x, ptype))
   }
@@ -68,6 +74,7 @@ from_arch_array_integer <- function(x) {
 #' @rdname from_arch_array
 #' @export
 from_arch_array.double <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+    message("from_arch_array.double")
   if (!is.null(x$schema$dictionary)) {
     return(convert_arrow_fallback(x, ptype))
   }
@@ -78,6 +85,7 @@ from_arch_array.double <- function(x, ptype = arch_default_ptype(x$schema), ...)
 #' @rdname from_arch_array
 #' @export
 from_arch_array.raw <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+    message("from_arch_array.raw")
   if (!is.null(x$schema$dictionary)) {
     return(convert_arrow_fallback(x, ptype))
   }
@@ -88,6 +96,7 @@ from_arch_array.raw <- function(x, ptype = arch_default_ptype(x$schema), ...) {
 #' @rdname from_arch_array
 #' @export
 from_arch_array.character <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+    message("from_arch_array.character")
   if (is.null(x$schema$dictionary)) {
     with_arrow_fallback(.Call(arch_c_character_from_array, x), x, ptype)
   } else {
@@ -100,6 +109,7 @@ from_arch_array.character <- function(x, ptype = arch_default_ptype(x$schema), .
 #' @rdname from_arch_array
 #' @export
 from_arch_array.factor <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+    message("from_arch_array.factor")
   assert_x_arch_array(x)
   stopifnot(!is.null(x$schema$dictionary))
 
@@ -126,6 +136,7 @@ from_arch_array.factor <- function(x, ptype = arch_default_ptype(x$schema), ...)
 #' @rdname from_arch_array
 #' @export
 from_arch_array.data.frame <- function(x, ptype = arch_default_ptype(x$schema), ...) {
+    message("from_arch_array.data.frame")
   assert_x_arch_array(x)
   if (!is.null(x$schema$dictionary)) {
     return(convert_arrow_fallback(x, ptype))
@@ -153,6 +164,7 @@ from_arch_array.data.frame <- function(x, ptype = arch_default_ptype(x$schema), 
 }
 
 with_arrow_fallback <- function(expr, x, ptype) {
+    message("with_arrow_fallback")
   tryCatch(
     force(expr),
     error = function(e) {
@@ -162,6 +174,7 @@ with_arrow_fallback <- function(expr, x, ptype) {
 }
 
 convert_arrow_fallback <- function(x, ptype) {
+    message("convert_arrow_fallback")
   assert_arrow("fallback conversion")
   if (!requireNamespace("vctrs", quietly = TRUE)) {
     stop("Package 'vctrs' required for fallback conversion", call. = FALSE)

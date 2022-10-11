@@ -9,6 +9,7 @@
 #' @rdname pkg-arrow
 #'
 from_arch_array.Array <- function(x, ptype, ...) {
+    message("from_arch_array.Array")
  arch_arr <- from_arch_array(x, arrow::Array)
 
  if (arch_arr$type == ptype$type) {
@@ -21,13 +22,15 @@ from_arch_array.Array <- function(x, ptype, ...) {
 #' @rdname pkg-arrow
 #' @export
 from_arch_array.R6ClassGenerator <- function(x, ptype, ...) {
-  temp_schema <- arch_allocate_schema()
+    message("from_arch_array.R6ClassGenerator")
+    temp_schema <- arch_allocate_schema()
   temp_array_data <- arch_allocate_array_data()
 
   switch(
     ptype$classname,
     RecordBatch =,
     Array = {
+      message("RecordBatch + Array case")
       arch_pointer_export(x$schema, temp_schema)
       arch_pointer_export(x$array_data, temp_array_data)
 
