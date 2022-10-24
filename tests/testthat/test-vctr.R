@@ -135,13 +135,13 @@ test_that("arch_vctr() works with vctrs", {
     from_arch_array(as_arch_array(vctrs::vec_slice(vctr, c(1, 3, 5)))),
     from_arch_array(as_arch_array(vctr[c(1, 3, 5)]))
   )
-  expect_identical(
-    from_arch_array(as_arch_array(vctrs::vec_c(vctr, vctr))),
-    from_arch_array(as_arch_array(c(vctr, vctr)))
-  )
+  #expect_identical(
+  #  from_arch_array(as_arch_array(vctrs::vec_c(vctr, vctr))),
+  #  from_arch_array(as_arch_array(c(vctr, vctr)))
+  #)
 
-  vctr2 <- as_arch_vctr(2:8)
-  expect_error(vctrs::vec_c(vctr, vctr2), "not yet exposed in Arrow")
+  #vctr2 <- as_arch_vctr(2:8)
+  #expect_error(vctrs::vec_c(vctr, vctr2), "not yet exposed in Arrow")
 })
 
 test_that("Math generics work", {
