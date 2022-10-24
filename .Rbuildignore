@@ -15,3 +15,4 @@ GRTAGS
 GTAGS
 .*\.zip$
 ^vignettes
+^\.editorconfig$
