@@ -15,4 +15,5 @@ GRTAGS
 GTAGS
 .*\.zip$
 ^vignettes
+^Motivation-edd.md$
 ^\.editorconfig$
