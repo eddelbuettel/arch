@@ -1,4 +1,8 @@
 
+**Please note** that this is an inactive **deprecated and superceded** experimental package._You probably want [nanoarrow](https://github.com/apache/arrow-nanoarrow) instead.
+
+---
+
 # arch: Arrow R and C Helpers
 
 [![ci](https://github.com/eddelbuettel/arch/actions/workflows/ci.yaml/badge.svg)](https://github.com/eddelbuettel/arch/actions/workflows/ci.yaml)
